@@ -3,7 +3,7 @@
 IMAGEPATH=$HOME/projects/ubunix
 
 dr() {                                                                                               I 
-    docker build $IMAGEPATH -t ubunix
+    docker build $IMAGEPATH --quiet --tag ubunix
     docker run -t -i \
         --mount type=bind,source="$HOME",target="$HOME" \
         --mount type=bind,source="$(pwd)",target="$(pwd)" \
