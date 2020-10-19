@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 IMAGEPATH=$HOME/projects/ubunix
 
 dr() {                                                                                               I 
@@ -14,4 +16,8 @@ dr-add-run() {
 
 dr-install() {
     echo "RUN apt-get -y install $@" >> $IMAGEPATH/Dockerfile
+}
+
+drs() {
+    dr $(basename $SHELL) -i
 }
