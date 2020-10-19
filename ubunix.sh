@@ -15,7 +15,7 @@ dr-add-run() {
 }
 
 dr-install() {
-    echo "RUN apt-get -y install $@" >> $IMAGEPATH/Dockerfile
+    echo "RUN DEBIAN_FRONTEND=noninteractive apt-get -y install $@" >> $IMAGEPATH/Dockerfile
 }
 
 drs() {
