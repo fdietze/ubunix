@@ -15,3 +15,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install zsh
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install git wget
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libncurses5
+RUN apt-get -y install sudo
+RUN apt-get -y install vim

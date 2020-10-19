@@ -31,7 +31,7 @@ dr() {
         -v /var/lib/dbus:/var/lib/dbus \
         --mount type=bind,source="$HOME",target="$HOME" \
         --mount type=bind,source="$(pwd)",target="$(pwd)" \
-            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && su $USER --session-command '$(basename "$SHELL") -ic \"$COMMAND\"'"; 
+            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && echo -e 'root ALL=(ALL:ALL) SETENV: ALL\n $USER	ALL=(ALL:ALL)	NOPASSWD:SETENV: ALL' >> /etc/sudoers && su $USER --session-command '$(basename "$SHELL") -ic \"$COMMAND\"'"; 
 }
 
 dr-add-run() {
