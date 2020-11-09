@@ -8,7 +8,7 @@ dr() {                                                                          
         -e "TERM=xterm-256color" \
         --mount type=bind,source="$HOME",target="$HOME" \
         --mount type=bind,source="$(pwd)",target="$(pwd)" \
-            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && su $USER -c '$*'"; 
+            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && su $USER --session-command '$*'"; 
 }
 
 dr-add-run() {
