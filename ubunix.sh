@@ -3,21 +3,21 @@
 IMAGEPATH=$HOME/projects/ubunix
 
 dr() {                                                                                               I 
-    docker build $IMAGEPATH --quiet --tag ubunix
+    docker build "$IMAGEPATH" --quiet --tag ubunix && \
     docker run -t -i \
         --mount type=bind,source="$HOME",target="$HOME" \
         --mount type=bind,source="$(pwd)",target="$(pwd)" \
-            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && su $USER -c '$(echo $@)'"; 
+            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && su $USER -c '$*'"; 
 }
 
 dr-add-run() {
-    echo "RUN $@" >> $IMAGEPATH/Dockerfile
+    echo "RUN $*" >> "$IMAGEPATH"/Dockerfile
 }
 
 dr-install() {
-    echo "RUN DEBIAN_FRONTEND=noninteractive apt-get -y install $@" >> $IMAGEPATH/Dockerfile
+    echo "RUN DEBIAN_FRONTEND=noninteractive apt-get -y install $*" >> "$IMAGEPATH"/Dockerfile
 }
 
 drs() {
-    dr $(basename $SHELL) -i
+    dr "$(basename "$SHELL")" -i
 }
