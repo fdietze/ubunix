@@ -15,6 +15,11 @@ dr-add-run() {
     echo "RUN $*" >> "$IMAGEPATH"/Dockerfile
 }
 
+
+dr-edit() {
+    $EDITOR "$IMAGEPATH"/Dockerfile
+}
+
 dr-install() {
     echo "RUN DEBIAN_FRONTEND=noninteractive apt-get -y install $*" >> "$IMAGEPATH"/Dockerfile
 }
