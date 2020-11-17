@@ -9,7 +9,8 @@ IMAGEPATH=$HOME/projects/ubunix
 dr() {
     docker build "$IMAGEPATH" --quiet --tag ubunix && \
     docker run -t -i \
-        -e "TERM=xterm-256color" \
+        --env "TERM=xterm-256color" \
+        --env "UBUNIX=true" \
         --env="DISPLAY" \
         --env="XDG_RUNTIME_DIR" \
         --net=host \
