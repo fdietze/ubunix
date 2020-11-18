@@ -7,6 +7,12 @@ IMAGEPATH=$HOME/projects/ubunix
 # https://stackoverflow.com/questions/28985714/run-apps-using-audio-in-a-docker-container/28985715#28985715
 
 dr() {
+    # https://stackoverflow.com/questions/1668649/how-to-keep-quotes-in-bash-arguments/8723305#8723305
+    COMMAND=''
+    for i in "$@"; do 
+        i="${i//\\/\\\\}"
+        COMMAND="$COMMAND \"${i//\"/\\\"}\""
+    done
     docker build "$IMAGEPATH" --quiet --tag ubunix && \
     docker run -t -i \
         --env "TERM=xterm-256color" \
@@ -25,7 +31,7 @@ dr() {
         -v /var/lib/dbus:/var/lib/dbus \
         --mount type=bind,source="$HOME",target="$HOME" \
         --mount type=bind,source="$(pwd)",target="$(pwd)" \
-            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && su $USER --session-command '$*'"; 
+            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && su $USER --session-command '$(basename "$SHELL") -ic \"$COMMAND\"'"; 
 }
 
 dr-add-run() {
