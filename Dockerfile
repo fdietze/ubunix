@@ -23,4 +23,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install pulseaudio pavucontrol
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs npm yarn
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python3 python3-pip python3-venv python3-setuptools python3-dev cython3
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install pkg-config autoconf-archive libtool autotools-dev libbz2-dev zlib1g-dev libtar-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install ruby ruby-dev
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-8-jdk
