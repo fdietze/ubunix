@@ -13,7 +13,7 @@ ENV LC_ALL en_US.UTF-8
 
 # basic tools
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install sudo
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install moreutils bsdmainutils iputils-ping
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install moreutils bsdmainutils iputils-ping usbutils
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install zsh git wget vim
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libncurses5

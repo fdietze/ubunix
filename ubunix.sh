@@ -29,6 +29,8 @@ dr() {
         --device /dev/dri \
         --privileged \
         -v /dev/shm:/dev/shm \
+        -v /dev/bus/usb:/dev/bus/usb \
+        -v /dev/serial:/dev/serial \
         -v /etc/machine-id:/etc/machine-id \
         -v /run/user/$UID:/run/user/$UID \
         -v /var/lib/dbus:/var/lib/dbus \
