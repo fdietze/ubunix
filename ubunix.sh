@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMAGEPATH=$HOME/projects/ubunix
+IMAGEPATH=$HOME/local/ubunix
 
 # https://medium.com/@SaravSun/running-gui-applications-inside-docker-containers-83d65c0db110
 # https://github.com/mviereck/x11docker/wiki/Hardware-acceleration
@@ -8,14 +8,15 @@ IMAGEPATH=$HOME/projects/ubunix
 # https://stackoverflow.com/questions/28985714/run-apps-using-audio-in-a-docker-container/28985715#28985715
 # https://github.com/mviereck/x11docker
 
-dr() {
+ux() {
     # https://stackoverflow.com/questions/1668649/how-to-keep-quotes-in-bash-arguments/8723305#8723305
     COMMAND=''
     for i in "$@"; do 
         i="${i//\\/\\\\}"
         COMMAND="$COMMAND \"${i//\"/\\\"}\""
     done
-    docker build "$IMAGEPATH" --quiet --tag ubunix && \
+    # docker build "$IMAGEPATH" --quiet --tag ubunix && \
+    docker build "$IMAGEPATH" --tag ubunix && \
     docker run -t -i \
         --env "TERM=xterm-256color" \
         --env "UBUNIX=true" \
@@ -40,19 +41,19 @@ dr() {
             ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && echo -e 'root ALL=(ALL:ALL) SETENV: ALL\n $USER	ALL=(ALL:ALL)	NOPASSWD:SETENV: ALL' >> /etc/sudoers && su $USER --session-command '$(basename "$SHELL") -ic \"$COMMAND\"'"; 
 }
 
-dr-add-run() {
+ux-add-run() {
     echo "RUN $*" >> "$IMAGEPATH"/Dockerfile
 }
 
 
-dr-edit() {
+ux-edit() {
     $EDITOR "$IMAGEPATH"/Dockerfile
 }
 
-dr-install() {
+ux-install() {
     echo "RUN DEBIAN_FRONTEND=noninteractive apt-get -y install $*" >> "$IMAGEPATH"/Dockerfile
 }
 
-drs() {
-    dr "$(basename "$SHELL")" -i
+uxs() {
+    ux "$(basename "$SHELL")" -i
 }
