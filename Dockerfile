@@ -1,5 +1,14 @@
 from ubuntu:latest
 
+ARG user_name_arg
+ENV user_name=$user_name_arg
+ARG user_id_arg
+ENV user_id=$user_id_arg
+ARG user_gid_arg
+ENV user_gid=$user_gid_arg
+ARG docker_gid_arg
+ENV docker_gid=$docker_gid_arg
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get upgrade -y
 # software-properties-common = add-apt-repositories
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install apt-utils software-properties-common
@@ -25,6 +34,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install sudo \
     pulseaudio
 # pulseaudio pavucontrol
 # snap
+
+RUN DEBIAN_FRONTEND=noninteractive groupadd -g "$docker_gid_arg" docker
+RUN DEBIAN_FRONTEND=noninteractive useradd -M --uid "$user_id_arg" --gid "$user_gid_arg" "$user_name_arg"
+RUN DEBIAN_FRONTEND=noninteractive usermod -aG sudo,docker "$user_name_arg"
+RUN DEBIAN_FRONTEND=noninteractive echo 'root ALL=(ALL:ALL) SETENV: ALL' >> /etc/sudoers && echo "$user_name_arg ALL=(ALL:ALL) NOPASSWD:SETENV: ALL" >> /etc/sudoers
 
 # advanced tools
 RUN DEBIAN_FRONTEND=noninteractive apt-key update -y

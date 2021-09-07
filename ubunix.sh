@@ -16,17 +16,28 @@ ux() {
         COMMAND="$COMMAND \"${i//\"/\\\"}\""
     done
     # docker build "$IMAGEPATH" --quiet --tag ubunix && \
-    docker build "$IMAGEPATH" --tag ubunix && \
+        # -v /etc/group:/etc/group:ro \
+        # -v /etc/passwd:/etc/passwd:ro \
+        # -v /etc/shadow:/etc/shadow:ro \
+    docker build "$IMAGEPATH" \
+        --tag ubunix \
+        --build-arg user_name_arg=${USER} \
+        --build-arg user_id_arg=${UID} \
+        --build-arg user_gid_arg=${GID} \
+        --build-arg docker_gid_arg=$(getent group docker | cut -d ":" -f3) \
+        && \
     docker run -t -i \
-        --env "TERM=xterm-256color" \
-        --env "UBUNIX=true" \
+        --env="TERM=xterm-256color" \
+        --env="UBUNIX=true" \
         --env="DISPLAY" \
         --env="XDG_RUNTIME_DIR" \
         --env="TMP=/tmp" \
         --net=host \
         --device /dev/fuse --cap-add SYS_ADMIN \
         --ipc=host \
+        --user=${USER} \
         --group-add video \
+        --group-add docker \
         --device /dev/dri \
         --privileged \
         -v /dev/shm:/dev/shm \
@@ -35,10 +46,12 @@ ux() {
         -v /etc/machine-id:/etc/machine-id \
         -v /run/user/$UID:/run/user/$UID \
         -v /var/lib/dbus:/var/lib/dbus \
+        -v /var/run/docker.sock:/var/run/docker.sock \
         -v /tmp:/tmp \
         --mount type=bind,source="$HOME",target="$HOME" \
         --mount type=bind,source="$(pwd)",target="$(pwd)" \
-            ubunix bash -c "useradd --uid $UID --gid $GID $USER && cd $(pwd) && echo -e 'root ALL=(ALL:ALL) SETENV: ALL\n $USER	ALL=(ALL:ALL)	NOPASSWD:SETENV: ALL' >> /etc/sudoers && su $USER --session-command '$(basename "$SHELL") -ic \"$COMMAND\"'"; 
+            ubunix bash -c "cd $(pwd) && $(basename "$SHELL") -ic \"$COMMAND\""; 
+            # ubunix bash -c "cd $(pwd) && sudo su $USER --session-command '$(basename "$SHELL") -ic \"$COMMAND\"'";
 }
 
 ux-add-run() {
