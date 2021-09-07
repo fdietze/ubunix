@@ -71,6 +71,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install npm nodejs yarn \
     android-studio \
     dhall \
     neovim
+RUN DEBIAN_FRONTEND=noninteractive curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip -o awscliv2.zip && sudo ./aws/install
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install docker-ce docker-ce-cli containerd.io
 RUN DEBIAN_FRONTEND=noninteractive npm update && npm upgrade && npm install -g npm
