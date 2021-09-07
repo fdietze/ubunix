@@ -32,6 +32,9 @@ ux() {
         --env="DISPLAY" \
         --env="XDG_RUNTIME_DIR" \
         --env="TMP=/tmp" \
+        --env="SHELL=$SHELL" \
+        --env="FLUTTER=~/flutter/bin" \
+        --env="CHROME_EXECUTABLE=/usr/bin/chromium-browser" \
         --net=host \
         --device /dev/fuse --cap-add SYS_ADMIN \
         --ipc=host \
