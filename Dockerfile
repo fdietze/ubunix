@@ -44,22 +44,25 @@ RUN DEBIAN_FRONTEND=noninteractive echo 'root ALL=(ALL:ALL) SETENV: ALL' >> /etc
 RUN DEBIAN_FRONTEND=noninteractive apt-key update -y
 
 RUN DEBIAN_FRONTEND=noninteractive wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+RUN DEBIAN_FRONTEND=noninteractive wget -q https://apt.releases.hashicorp.com/gpg -O- | apt-key add -
 RUN DEBIAN_FRONTEND=noninteractive wget -q https://download.docker.com/linux/ubuntu/gpg -O- | apt-key add -
 
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:neovim-ppa/unstable
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:mmk2410/intellij-idea
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:maarten-fonville/android-studio
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+RUN DEBIAN_FRONTEND=noninteractive apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
-# RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python3 python3-pip python3-venv python3-setuptools python3-dev cython3
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python3 python3-pip python3-venv python3-setuptools python3-dev cython3
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install npm nodejs yarn \
     pkg-config autoconf-archive libtool autotools-dev libbz2-dev zlib1g-dev libtar-dev \
     ruby ruby-dev \
     openjdk-8-jdk \
     fasd \
-    awscli \
+    # awscli \
+    terraform \
     tig \
     entr \
     code \
