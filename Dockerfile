@@ -1,28 +1,30 @@
-from ubuntu:latest
+FROM ubuntu:24.04
+ARG UID
+ARG GID
+ARG USER
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update
-# software-properties-common = add-apt-repositories
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install apt-utils software-properties-common
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get --yes --no-install-recommends install \
+    locales \
+    sudo zsh fish
+
+# set up local user
+RUN userdel ubuntu \
+ && useradd --uid "$UID" --gid "$GID" "$USER" \
+ && printf "root ALL=(ALL:ALL) SETENV: ALL\n %s	ALL=(ALL:ALL)	NOPASSWD:SETENV: ALL" "$USER" >> /etc/sudoers
 
 # Set the locale
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install locales
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
-# basic tools
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install sudo
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install moreutils bsdmainutils iputils-ping usbutils
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install zsh git wget vim
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libncurses5
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install fuse
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install pulseaudio pavucontrol
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get --yes --no-install-recommends install \
+    # ubuntu-desktop-minimal \
+    # build-essential cmake autoconf \
+    neovim git xclip wget
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs npm yarn
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python3 python3-pip python3-venv python3-setuptools python3-dev cython3
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install pkg-config autoconf-archive libtool autotools-dev libbz2-dev zlib1g-dev libtar-dev
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install ruby ruby-dev
+USER $USER
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install openjdk-8-jdk
+

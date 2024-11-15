@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -Eueo pipefail # https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail
+
+# https://medium.com/@SaravSun/running-gui-applications-inside-docker-containers-83d65c0db110
+# https://github.com/mviereck/x11docker/wiki/Hardware-acceleration
+# https://docs.docker.com/engine/reference/commandline/run/#access-an-nvidia-gpu
+# https://stackoverflow.com/questions/28985714/run-apps-using-audio-in-a-docker-container/28985715#28985715
+# https://github.com/mviereck/x11docker
+IMAGEPATH="$HOME/projects/ubunix"
+TAG="ubunix"
+GID="$(id -g)"
+TARGET_SHELL="$(basename $SHELL)"
+docker build --progress plain \
+	--build-arg UID=$UID \
+	--build-arg GID=$GID \
+	--build-arg USER=$USER \
+	--tag "$TAG" "$IMAGEPATH"
+docker run -t -i \
+	--env "TERM=xterm-256color" \
+	--env "UBUNIX=true" \
+	--env="DISPLAY" \
+	--env="XDG_RUNTIME_DIR" \
+	--env="TMP=/tmp" \
+	--net=host \
+	--device /dev/fuse --cap-add SYS_ADMIN \
+	--ipc=host \
+	--group-add video \
+	--device /dev/dri \
+	--privileged \
+	-v /dev/shm:/dev/shm \
+	-v /dev/bus/usb:/dev/bus/usb \
+	-v /dev/serial:/dev/serial \
+	-v /etc/machine-id:/etc/machine-id \
+	-v /run/user/$UID:/run/user/$UID \
+	-v /var/lib/dbus:/var/lib/dbus \
+	-v /tmp:/tmp \
+	-v /nix/store:/nix/store \
+	-v /etc/profiles:/etc/profiles \
+	-v /etc/static:/etc/static \
+	--mount type=bind,source="$HOME",target="$HOME" \
+	"$TAG" \
+	bash -c "cd $PWD && $TARGET_SHELL -i"
